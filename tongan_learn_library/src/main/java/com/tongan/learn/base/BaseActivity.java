@@ -3,15 +3,11 @@ package com.tongan.learn.base;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
-/**
- * Activity base class
- *
- * @author lichao
- * @date 2019/5/20 15:51
- */
+
+
 public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
@@ -55,7 +51,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected abstract void initEvent();
 
     /**
-     * go  camera activity
+     *
+     * @param intent
+     * @param resultCode
      */
     protected void startCameraActivity(Intent intent, int resultCode) {
         startActivityForResult(intent, resultCode);

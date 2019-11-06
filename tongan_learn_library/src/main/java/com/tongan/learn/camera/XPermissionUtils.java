@@ -20,9 +20,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,8 +43,8 @@ class XPermissionUtils {
     }
 
     @TargetApi(Build.VERSION_CODES.M)
-    public static void requestPermissionsAgain(@NonNull Context context, @NonNull String[] permissions,
-                                               @NonNull int requestCode) {
+    public static void requestPermissionsAgain( Context context,  String[] permissions,
+                                                int requestCode) {
         if (context instanceof Activity) {
             ((Activity) context).requestPermissions(permissions, requestCode);
         } else {
@@ -52,8 +52,8 @@ class XPermissionUtils {
         }
     }
 
-    public static void requestPermissions(@NonNull Context context, @NonNull int requestCode,
-                                          @NonNull String[] permissions, OnPermissionListener listener) {
+    public static void requestPermissions( Context context,  int requestCode,
+                                           String[] permissions, OnPermissionListener listener) {
         mRequestCode = requestCode;
         mOnPermissionListener = listener;
         String[] deniedPermissions = getDeniedPermissions(context, permissions);
@@ -67,8 +67,8 @@ class XPermissionUtils {
     /**
      * 请求权限结果，对应Activity中onRequestPermissionsResult()方法。
      */
-    public static void onRequestPermissionsResult(@NonNull Activity context, int requestCode,
-                                                  @NonNull String[] permissions, int[] grantResults) {
+    public static void onRequestPermissionsResult( Activity context, int requestCode,
+                                                   String[] permissions, int[] grantResults) {
         if (mRequestCode != -1 && requestCode == mRequestCode) {
             if (mOnPermissionListener != null) {
                 String[] deniedPermissions = getDeniedPermissions(context, permissions);
@@ -83,9 +83,12 @@ class XPermissionUtils {
     }
 
     /**
-     * 获取请求权限中需要授权的权限
+     *
+     * @param context
+     * @param permissions
+     * @return
      */
-    private static String[] getDeniedPermissions(@NonNull Context context, @NonNull String[] permissions) {
+    private static String[] getDeniedPermissions( Context context,  String[] permissions) {
         List<String> deniedPermissions = new ArrayList();
         for (String permission : permissions) {
             if (ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_DENIED) {
@@ -98,7 +101,7 @@ class XPermissionUtils {
     /**
      * 是否彻底拒绝了某项权限
      */
-    private static boolean hasAlwaysDeniedPermission(@NonNull Context context, @NonNull String... deniedPermissions) {
+    private static boolean hasAlwaysDeniedPermission( Context context,  String... deniedPermissions) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return false;
         boolean rationale;
         for (String permission : deniedPermissions) {

@@ -2,7 +2,7 @@ package com.tongan.learn;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.annotation.Keep;
+import androidx.annotation.Keep;
 import android.text.TextUtils;
 
 @Keep

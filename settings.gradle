@@ -1,1 +1,1 @@
-include ':app', ':tongan_learn_library'
+include ':SampleDemo', ':tongan_learn_library'

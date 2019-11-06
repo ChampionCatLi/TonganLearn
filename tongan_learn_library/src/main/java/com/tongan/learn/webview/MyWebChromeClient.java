@@ -6,10 +6,7 @@ import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 
-/**
- * @author lichao
- * @date 2019/5/22 9:55
- */
+
 public class MyWebChromeClient extends WebChromeClient {
 
     private TitleListener titleListener;

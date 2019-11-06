@@ -3,7 +3,7 @@ package com.tongan.learn.camera;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -16,9 +16,8 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -36,8 +35,8 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.tongan.learn.TaConstant;
 import com.tongan.learn.R;
+import com.tongan.learn.TaConstant;
 import com.tongan.learn.network.CallBackString;
 import com.tongan.learn.network.HttpUtil;
 import com.tongan.learn.util.BitmapUtils;
@@ -50,9 +49,7 @@ import static com.tongan.learn.TaConstant.cameraTipsColor;
 import static com.tongan.learn.TaConstant.themColor;
 import static com.tongan.learn.util.BitmapUtils.CUT_START_Y;
 
-/**
- *
- */
+
 public class CameraActivity extends Activity implements CameraInterface.CameraListener {
     private static String STATUS_OK = "ok";
     private static final String STATS_KEY = "status";

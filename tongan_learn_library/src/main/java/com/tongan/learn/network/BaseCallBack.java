@@ -5,10 +5,7 @@ import android.os.Looper;
 
 import static com.tongan.learn.network.StringUtil.getRetString;
 
-/**
- * @author chao
- * @date 2019/7/5 14:09
- */
+
 public abstract class BaseCallBack<T> {
     static Handler mMainHandler = new Handler(Looper.getMainLooper());
 

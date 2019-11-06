@@ -17,10 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author chao
- * @date 2019-7-5
- */
+
 class BaseRequest {
     private static final String BOUNDARY = java.util.UUID.randomUUID().toString();
     private static final String TWO_HYPHENS = "--";

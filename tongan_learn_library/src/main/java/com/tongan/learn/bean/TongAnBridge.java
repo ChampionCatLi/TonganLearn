@@ -1,17 +1,14 @@
 package com.tongan.learn.bean;
 
 import android.content.Context;
-import android.support.annotation.Keep;
+import androidx.annotation.Keep;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
 import com.tongan.learn.TaConstant;
 import com.tongan.learn.contract.StudyContract;
 
-/**
- * @author lichao
- * @date 2019/5/20 15:40
- */
+
 @Keep
 public class TongAnBridge {
 

@@ -12,10 +12,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-/**
- * @author chao
- * @date 2019-7-5
- */
+
 class RequestUtil {
 
     private ScheduledExecutorService executorService;

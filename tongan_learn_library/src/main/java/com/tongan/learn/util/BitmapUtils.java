@@ -15,9 +15,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-/**
- * 2019-5-24 10:43:13
- */
 
 public class BitmapUtils {
 
@@ -31,9 +28,9 @@ public class BitmapUtils {
     /**
      * 根据相机旋转旋转角度将图片进行旋转
      *
-     * @param bm
-     * @param cameraId
-     * @param cameraOrientation
+     * @param bm 图像
+     * @param cameraId  id
+     * @param cameraOrientation  方向
      * @return
      */
     public static Bitmap rotateBitmap(Bitmap bm, int cameraId, int cameraOrientation) {
@@ -173,7 +170,7 @@ public class BitmapUtils {
     /**
      * 质量压缩方法
      *
-     * @param image
+     * @param image 图片
      * @param size,单位KB，压缩到size之下
      * @return
      */

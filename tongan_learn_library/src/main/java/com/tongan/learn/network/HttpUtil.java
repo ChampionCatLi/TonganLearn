@@ -3,10 +3,7 @@ package com.tongan.learn.network;
 import java.io.File;
 import java.util.Map;
 
-/**
- * @author chao
- * @date 2019-7-5
- */
+
 public class HttpUtil {
     private static final String METHOD_GET = "GET";
     private static final String METHOD_POST = "POST";

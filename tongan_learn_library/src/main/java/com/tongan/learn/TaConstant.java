@@ -1,12 +1,9 @@
 package com.tongan.learn;
 
 import android.graphics.Color;
-import android.support.annotation.Keep;
+import androidx.annotation.Keep;
 
-/**
- * @author chao
- * @date 2019/7/7 10:54
- */
+
 @Keep
 public class TaConstant {
     public static final int STUDY_ACTIVITY_CODE = 717;

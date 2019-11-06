@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Build;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -23,10 +23,6 @@ import com.tongan.learn.webview.Eventlnterceptor;
 import com.tongan.learn.webview.TitleListener;
 import com.tongan.learn.webview.WebHelper;
 
-/**
- * @author lichao
- * @date 2019-5-22 09:27:30
- */
 public class StudyActivity extends BaseActivity implements StudyContract, TitleListener {
 
     private WebHelper webHelper;

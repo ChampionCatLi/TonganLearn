@@ -1,8 +1,14 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'com.github.dcendents.android-maven'
+
+group = 'com.tongan_study'
+version = '1.1.1'
 
 static def getProductName() {
     return "tongan-lms-h5-sdk"
 }
+
 
 android {
     compileSdkVersion 28
@@ -13,7 +19,7 @@ android {
         targetSdkVersion 28
         versionCode 1
         versionName "1.1.1"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
     }
 
@@ -31,8 +37,58 @@ android {
 
     dependencies {
         implementation fileTree(dir: 'libs', include: ['*.jar'])
-        implementation 'com.android.support:appcompat-v7:28.0.0'
+        implementation 'androidx.appcompat:appcompat:1.1.0'
+    }
+
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+    bintray {
+        user = properties.getProperty("bintray.user")
+        key = properties.getProperty("bintray.apikey")
+
+        pkg {
+            repo = 'tongan_study'
+            name = 'learn'
+
+            version {
+                name = '1.1.1-release'
+                desc = "通安 sdk"
+                vcsTag = '1.1.1'
+            }
+
+            licenses = ['Apache-2.0']
+            vcsUrl = 'https://github.com/ChampionCatLi/TonganLearn.git'
+            websiteUrl = 'https://github.com/ChampionCatLi/TonganLearn'
+        }
+
+        configurations = ['archives']
+
     }
 
 
+    task generateSourcesJar(type: Jar) {
+        from android.sourceSets.main.java.srcDirs
+        classifier 'sources'
+    }
+
+    task generateJavadocs(type: Javadoc) {
+        options.encoding "UTF-8"
+        options.charSet 'UTF-8'
+        failOnError false
+        source = android.sourceSets.main.java.srcDirs //source指定了源码位置
+        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    }
+
+//这里dependsOn意为仅当generateJavadocs完成后才开始本task，和ant脚本也是对应的。
+    task generateJavadocsJar(type: Jar, dependsOn: generateJavadocs) {
+        from generateJavadocs.destinationDir
+        classifier 'javadoc'
+    }
+    artifacts {
+        archives generateJavadocsJar
+        archives generateSourcesJar
+    }
 }
+
+
