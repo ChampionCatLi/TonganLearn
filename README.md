@@ -14,7 +14,6 @@
 ```
 allprojects {
     repositories {
-        google()
         //必须配置
         jcenter()
     }
