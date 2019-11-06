@@ -1,0 +1,38 @@
+apply plugin: 'com.android.library'
+
+static def getProductName() {
+    return "tongan-lms-h5-sdk"
+}
+
+android {
+    compileSdkVersion 28
+
+
+    defaultConfig {
+        minSdkVersion 19
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.1.1"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    android.libraryVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = getProductName() + "_${defaultConfig.versionName}" + '.aar'
+        }
+    }
+
+    dependencies {
+        implementation fileTree(dir: 'libs', include: ['*.jar'])
+        implementation 'com.android.support:appcompat-v7:28.0.0'
+    }
+
+
+}

@@ -1,0 +1,13 @@
+<resources>
+    <string name="tong_an_learn_app_name">TongAn-Learn-Library</string>
+    <string name="tong_an_learn_camera_title">人脸验证</string>
+    <string name="tong_an_learn_camera_tips_title">请本人进行验证，拍照时注意所处环境及个人形象，并确认：</string>
+    <string name="tong_an_learn_camera_tips_list">1. 照片光照均匀，不过度曝光或背光;\n2. 照片中人脸正面，完成位于画面矿中;\n3. 照片中人脸轮廓清晰，眼、鼻、嘴等重要部位不被遮挡且可辨认 </string>
+    <string name="tong_an_learn_camera_take_photo">拍照验证</string>
+    <string name="tong_an_learn_url_err_tips">请传入正确的URL</string>
+    <string name="tong_an_learn_camera_replay">重新拍摄</string>
+    <string name="tong_an_learn_camera_commit">提交验证</string>
+    <string name="tong_an_learn_camera_dialog_tips">人脸验证失败</string>
+    <string name="tong_an_learn_camera_dialog_positive_button">重试</string>
+    <string name="tong_an_learn_camera_dialog_negative_button">取消</string>
+</resources>

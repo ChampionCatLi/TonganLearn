@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="tong_an_learn_white">#ffffff</color>
+    <color name="tong_an_learn_black_030303">#030303</color>
+    <color name="tong_an_learn_black">#000000</color>
+    <color name="tong_an_learn_green">#00BB2C</color>
+    <color name="tong_an_learn_blue">#2196f3</color>
+    <color name="tong_an_learn_gray">#8E8E93</color>
+    <color name="tong_an_learn_transparent">#00000000</color>
+    <color name="tong_an_learn_orange">#F58609</color>
+    <color name="tong_an_learn_learn_activity_status_title_color">#2196f3</color>
+
+</resources>
