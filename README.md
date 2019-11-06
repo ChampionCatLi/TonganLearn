@@ -1,6 +1,6 @@
 # 通安 SDk Demo
 
-本demo 为采用 jcenter 
+本demo 为通安 Android SDK demo的演示项目。
 
 
 ***
@@ -11,7 +11,7 @@
 
 #### 1.在Project的build.gradle文件中配置。
 
-(```)
+```
 allprojects {
     repositories {
         google()
@@ -19,15 +19,15 @@ allprojects {
         jcenter()
     }
 }
-(```)
+```
 
 #### 2.在App的build.gradle的文件中添加依赖。
 
-(```)
+```
 dependencies {
         implementation 'com.tongan_study:tongan_learn_library:1.1.1'
 }
-(```)
+```
 
 
 ### 二.使用导入 arr 包方式:
@@ -38,12 +38,11 @@ dependencies {
 
 ## 其他
 
-请您 coding 愉快 🐶
+祝您 coding 愉快，身体健康。🐶
 
 通安技术
 c
 
 
-请您 coding 愉快 🐶技术
-请您 coding 愉快 🐶
+
 
