@@ -1,6 +1,6 @@
 # 通安 SDk Demo
 
-本demo 为通安 Android SDK demo的演示项目。
+本demo 为通安 Android SDK demo的演示项目。通过简单几步就可对接平台。
 
 
 ***
@@ -36,29 +36,29 @@ dependencies {
 
 **请先确保通过文档获取到学习URL**
 
-### 调用 
+### 使用 
 
 #### 1.通过单利模式
 
 建议采用此方法。
 
 ```
-     new StudyMessage.Builder()
-     .setStudyUrl("获取到的 URL") // 此方法为必要方法，我们通过它来实现对 URL 传递。(必要方法，必须调用)
-     .setStatusBarColor(statusBarColor) //设置状态栏颜色值，可根据实际情况自行更改。默认是"#F58609"。(非必要)
-     .setThemColor(themColor)//设置有关相机拍照页面 button 背景色。默认是"#F58609"。(非必要)
-     .builder().study(Activity); //Activity 上下文对象
+new StudyMessage.Builder()
+.setStudyUrl("获取到的 URL") // 此方法为必要方法，我们通过它来实现对 URL 传递。(必要方法，必须调用)
+.setStatusBarColor(statusBarColor) //设置状态栏颜色值，可根据实际情况自行更改。默认是"#F58609"。(非必要)
+.setThemColor(themColor)//设置有关相机拍照页面 button 背景色。默认是"#F58609"。(非必要)
+.builder().study(Activity); //Activity 上下文对象
 
 ```
 
 #### 2.通过传统Intent方法调用
 
 ```
-        Intent intent = new Intent(this, StudyActivity.class);
-        intent.putExtra(TaConstant.TONGAN_LMS_URL, url);
-        intent.putExtra(TaConstant.TONGAN_LMS_STATUS,"设置状态栏颜色值");
-        intent.putExtra(TaConstant.TONGAN_LMS_THEM,"设置相机页面 button 颜色值");
-        startActivity(intent);
+Intent intent = new Intent(this, StudyActivity.class);
+intent.putExtra(TaConstant.TONGAN_LMS_URL, url);
+intent.putExtra(TaConstant.TONGAN_LMS_STATUS,"设置状态栏颜色值");
+intent.putExtra(TaConstant.TONGAN_LMS_THEM,"设置相机页面 button 颜色值");
+startActivity(intent);
 
 ```
 
