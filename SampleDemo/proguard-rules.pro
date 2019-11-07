@@ -20,6 +20,9 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile\
 
+-keep public class * extends android.app.Activity
+
+
 -dontwarn com.bokecc.sdk.mobile.**
 -keep public class com.bokecc.sdk.mobile.**{*;}
 -keep public interface com.bokecc.sdk.mobile.**{*;}

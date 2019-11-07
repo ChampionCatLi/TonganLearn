@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'com.github.dcendents.android-maven'
 
-group = 'com.tongan_study'
+group = 'com.tongan.study'
 version = '1.1.1'
 
 static def getProductName() {
@@ -25,7 +25,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -48,8 +48,8 @@ android {
         key = properties.getProperty("bintray.apikey")
 
         pkg {
-            repo = 'tongan_study'
-            name = 'learn'
+            repo = 'tongan.study'
+            name = 'learnLib'
 
             version {
                 name = '1.1.1-release'

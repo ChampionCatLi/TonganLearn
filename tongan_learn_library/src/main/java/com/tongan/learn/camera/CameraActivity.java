@@ -55,7 +55,7 @@ public class CameraActivity extends Activity implements CameraInterface.CameraLi
     private static final String STATS_KEY = "status";
     private static final String UP_LOAD_URL = "https://mb.anjia365.com/m/home/my/facerecog/submit";
     //    private static final String MENG_UP_LOAD_URL = "http://192.168.3.93/m/home/my/facerecog/submit";
-//    private static final String WANG_UP_LOAD_URL = "http://192.168.1.24/m/home/my/facerecog/submit";
+//    private static final String WANG_UP_LOAD_URL = "http://192.168.3.205/m/home/my/facerecog/submit";
     private AlertDialog dialog;
     private final int PERMISSION_REQUEST_CODE_CAMERA = 0x02;
     private final int PERMISSION_REQUEST_CODE_STORAGE = 0x03;
