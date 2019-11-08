@@ -41,14 +41,20 @@
 #保持泛型
 -keepattributes Signature
 
-#保持所有实现 Serializable 接口的类成员
--keepclassmembers class * implements java.io.Serializable {
-    static final long serialVersionUID;
-    private static final java.io.ObjectStreamField[] serialPersistentFields;
-    private void writeObject(java.io.ObjectOutputStream);
-    private void readObject(java.io.ObjectInputStream);
-    java.lang.Object writeReplace();
-    java.lang.Object readResolve();
-}
--keep public class **.*bean*.** {*;}
+
 -keep public  class com.tongan.learn.TaConstant{*;}
+-keep class com.tongan.learn.bean{*;}
+-keep class com.tongan.learn.com.tongan.learn.StudyMessage{*;}
+-keep public class * extends android.app.Activity
+-keep class android.support.** {*;}
+-keep class **.R$* {*;}
+-keepclassmembers class fqcn.of.javascript.interface.for.webview {
+    public *;
+}
+-keepclassmembers class * extends android.webkit.webViewClient {
+    public void *(android.webkit.WebView, java.lang.String, android.graphics.Bitmap);
+    public boolean *(android.webkit.WebView, java.lang.String);
+}
+-keepclassmembers class * extends android.webkit.webViewClient {
+    public void *(android.webkit.webView, jav.lang.String);
+}

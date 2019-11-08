@@ -19,15 +19,7 @@ android {
         targetSdkVersion 28
         versionCode 1
         versionName "1.1.1"
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
-    }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
+        consumerProguardFiles 'proguard-rules.pro'
     }
     android.libraryVariants.all { variant ->
         variant.outputs.all {
@@ -52,7 +44,7 @@ android {
             name = 'learnLib'
 
             version {
-                name = '1.1.1-release'
+                name = '1.1.1'
                 desc = "通安 sdk"
                 vcsTag = '1.1.1'
             }
