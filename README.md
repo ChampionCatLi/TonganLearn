@@ -1,4 +1,4 @@
-# 通安 SDk Demo
+# 通安 SDK Demo
 
 本demo 为通安 Android SDK demo的演示项目。通过简单几步就可对接平台。
 
