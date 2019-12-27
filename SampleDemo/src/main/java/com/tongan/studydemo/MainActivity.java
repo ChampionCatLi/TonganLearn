@@ -16,7 +16,7 @@ import java.net.URLEncoder;
 
 public class MainActivity extends AppCompatActivity {
     //    String url = "http://flandrescarlet.gitee.io/tools/test-v/dist/#/";
-    String url = "";
+    String url = "http://192.168.3.95:8080/c/";
     String themColor = "#666666";
     String statusBarColor = "#666666";
 
