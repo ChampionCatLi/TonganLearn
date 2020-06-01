@@ -64,9 +64,7 @@ public class CameraActivity extends Activity implements CameraInterface.CameraLi
     private OrientationEventListener mOrientationListener;
     private int cameraOrientation = 0;
     private int picQuality;
-    /**
-     * set the photo size  unit kb
-     */
+
     private int pictureSize;
     private LinearLayout tongAnTakePhoto;
     private LinearLayout tongAnCameraReplay;

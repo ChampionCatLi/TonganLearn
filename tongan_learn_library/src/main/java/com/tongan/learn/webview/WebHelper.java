@@ -2,8 +2,12 @@ package com.tongan.learn.webview;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
+import android.webkit.DownloadListener;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
@@ -56,6 +60,14 @@ public class WebHelper {
             myWebChromeClient = new MyWebChromeClient(videoImpl);
             webView.setWebChromeClient(myWebChromeClient);
             webView.setWebViewClient(new MyWebClient());
+            webView.setDownloadListener(new DownloadListener() {
+                @Override
+                public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
+
+                    Log.i("cc", "onDownloadStart: "+url);
+
+                }
+            });
             webView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {

@@ -20,7 +20,6 @@ import java.util.Set;
 public class VideoImpl implements IWebVideo, Eventlnterceptor {
     private Activity mActivity;
     private WebView mWebView;
-    private static final String TAG = VideoImpl.class.getSimpleName();
     private Set<Pair<Integer, Integer>> mFlags = null;
     private View mMoiveView = null;
     private ViewGroup mMoiveParentView = null;

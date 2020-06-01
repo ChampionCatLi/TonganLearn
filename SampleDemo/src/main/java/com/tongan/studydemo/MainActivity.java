@@ -16,7 +16,8 @@ import java.net.URLEncoder;
 
 public class MainActivity extends AppCompatActivity {
     //    String url = "http://flandrescarlet.gitee.io/tools/test-v/dist/#/";
-    String url = "http://192.168.3.95:8080/c/";
+//    String url = "http://192.168.3.95:8080/c/";
+    String  url ="http://59.110.139.185/c";
     String themColor = "#666666";
     String statusBarColor = "#666666";
 
@@ -33,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * 采用单利模式
+     * 采用链式跳转
      */
     private void goStudyActivityByMessage() {
         new StudyMessage.Builder().setStudyUrl(url).setStatusBarColor(statusBarColor).setThemColor(themColor).builder().study(this);
