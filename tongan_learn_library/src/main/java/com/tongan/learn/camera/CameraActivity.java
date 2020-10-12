@@ -16,8 +16,11 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -54,7 +57,7 @@ public class CameraActivity extends Activity implements CameraInterface.CameraLi
     private static String STATUS_OK = "ok";
     private static final String STATS_KEY = "status";
     private static final String UP_LOAD_URL = "https://mb.anjia365.com/m/home/my/facerecog/submit";
-    //    private static final String MENG_UP_LOAD_URL = "http://192.168.3.93/m/home/my/facerecog/submit";
+//        private static final String MENG_UP_LOAD_URL = "http://59.110.139.185/m/home/my/facerecog/submit";
 //    private static final String WANG_UP_LOAD_URL = "http://192.168.3.205/m/home/my/facerecog/submit";
     private AlertDialog dialog;
     private final int PERMISSION_REQUEST_CODE_CAMERA = 0x02;
@@ -223,7 +226,7 @@ public class CameraActivity extends Activity implements CameraInterface.CameraLi
                     HttpUtil.uploadFile(url, file, file.getName(), HttpUtil.FILE_TYPE_IMAGE, new CallBackString() {
                         @Override
                         protected void onFailure(int code, String errorMessage) {
-                            showDialog();
+                            showDialog("");
                             progressLayout.setVisibility(View.GONE);
                         }
 
@@ -236,7 +239,11 @@ public class CameraActivity extends Activity implements CameraInterface.CameraLi
                                 if (STATUS_OK.equals(statusKey)) {
                                     setDataAndFinish(true);
                                 } else {
-                                    showDialog();
+                                    String tipsStr = "";
+                                    if (jsonObject.has("message")) {
+                                        tipsStr = jsonObject.optString("message");
+                                    }
+                                    showDialog(tipsStr);
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -352,9 +359,12 @@ public class CameraActivity extends Activity implements CameraInterface.CameraLi
     }
 
 
-    private void showDialog() {
+    private void showDialog(@Nullable String tips) {
+        if (TextUtils.isEmpty(tips)) {
+            tips = getString(R.string.tong_an_learn_camera_dialog_tips);
+        }
         if (dialog == null) {
-            dialog = new AlertDialog.Builder(this).setMessage(R.string.tong_an_learn_camera_dialog_tips).setPositiveButton(R.string.tong_an_learn_camera_dialog_positive_button
+            dialog = new AlertDialog.Builder(this).setMessage(tips).setPositiveButton(R.string.tong_an_learn_camera_dialog_positive_button
                     , new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {

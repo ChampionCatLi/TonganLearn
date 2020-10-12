@@ -44,7 +44,7 @@ public class WebHelper {
             webSettings.setJavaScriptEnabled(true);
             webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
             webSettings.setSupportMultipleWindows(true);
-
+            webSettings.setMediaPlaybackRequiresUserGesture(false);
             // 设置 loaclStorage
             webSettings.setAppCacheEnabled(true);
             webSettings.setSupportZoom(true);
