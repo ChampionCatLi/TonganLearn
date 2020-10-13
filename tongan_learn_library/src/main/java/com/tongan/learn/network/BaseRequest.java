@@ -1,6 +1,7 @@
 package com.tongan.learn.network;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.tongan.learn.TaConstant;
 
@@ -253,6 +254,11 @@ class BaseRequest {
         }
         e.printStackTrace();
         BaseResponse response = new BaseResponse();
+        try {
+            response.code = conn.getResponseCode();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
         response.exception = e;
         return response;
     }

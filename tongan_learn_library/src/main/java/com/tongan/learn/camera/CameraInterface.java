@@ -46,9 +46,14 @@ import static com.tongan.learn.camera.CameraParaUtil.CAMERA_FILE_PATH;
     }
 
     public interface CameraListener {
-        void onTakePictureSuccess(File pictureFile);
 
         void onTakePictureFail(byte[] data);
+
+        /**
+         * 拍照完成后 传递字节
+         * @param data
+         */
+        void  onTakePictureByte(byte[] data);
     }
 
     public interface VideoRecordListener {
@@ -148,28 +153,22 @@ import static com.tongan.learn.camera.CameraParaUtil.CAMERA_FILE_PATH;
     private Camera.PictureCallback mPicture = new Camera.PictureCallback() {
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
-            File pictureFile = FileUtils.getOutputMediaFile(MEDIA_TYPE_IMAGE, CAMERA_FILE_PATH);
-
-            if (pictureFile == null) {
+//            File pictureFile = FileUtils.getOutputMediaFile(MEDIA_TYPE_IMAGE, CAMERA_FILE_PATH);
+            if (data == null||data.length==0) {
                 onTakePictureFail(data);
                 return;
             }
 
             try {
-                FileOutputStream fos = new FileOutputStream(pictureFile);
-                fos.write(data);
-                fos.close();
-//                Log.d(TAG, "拍照，存储中: " + Arrays.toString(data));
                 if (cameraListener != null) {
-                    cameraListener.onTakePictureSuccess(pictureFile);
+                    cameraListener.onTakePictureByte(data);
                 }
-//                mCamera.startPreview(); //再次进入preview
-//                mCamera.cancelAutoFocus();
-            } catch (FileNotFoundException e) {
-                onTakePictureFail(data);
-            } catch (IOException e) {
+
+            } catch (Exception e) {
                 onTakePictureFail(data);
             }
+
+
         }
     };
 

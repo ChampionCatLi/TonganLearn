@@ -25,6 +25,7 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.OrientationEventListener;
 import android.view.View;
@@ -37,6 +38,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tongan.learn.R;
 import com.tongan.learn.TaConstant;
@@ -47,9 +49,18 @@ import com.tongan.learn.util.BitmapUtils;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static com.tongan.learn.TaConstant.cameraTipsColor;
 import static com.tongan.learn.TaConstant.themColor;
+import static com.tongan.learn.network.HttpUtil.ERROR_CODE_413;
+import static com.tongan.learn.network.HttpUtil.ERROR_CODE_500;
+import static com.tongan.learn.network.HttpUtil.ERROR_MSG_FAILED_CONNECT;
+import static com.tongan.learn.network.HttpUtil.ERROR_MSG_FAILED_UNABLE_CONNECT;
+import static com.tongan.learn.network.HttpUtil.ERROR_MSG_TIME_OUT;
 import static com.tongan.learn.util.BitmapUtils.CUT_START_Y;
 
 
@@ -57,8 +68,8 @@ public class CameraActivity extends Activity implements CameraInterface.CameraLi
     private static String STATUS_OK = "ok";
     private static final String STATS_KEY = "status";
     private static final String UP_LOAD_URL = "https://mb.anjia365.com/m/home/my/facerecog/submit";
-//        private static final String MENG_UP_LOAD_URL = "http://59.110.139.185/m/home/my/facerecog/submit";
-//    private static final String WANG_UP_LOAD_URL = "http://192.168.3.205/m/home/my/facerecog/submit";
+//        private static final String TEMP_UP_LOAD_URL = "http://59.110.139.185/m/home/my/facerecog/submit";
+    //    private static final String WANG_UP_LOAD_URL = "http://192.168.3.205/m/home/my/facerecog/submit";
     private AlertDialog dialog;
     private final int PERMISSION_REQUEST_CODE_CAMERA = 0x02;
     private final int PERMISSION_REQUEST_CODE_STORAGE = 0x03;
@@ -83,6 +94,7 @@ public class CameraActivity extends Activity implements CameraInterface.CameraLi
     private String clazzId;
     private LinearLayout progressLayout;
     private ImageView cameraFrameImg;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -226,7 +238,21 @@ public class CameraActivity extends Activity implements CameraInterface.CameraLi
                     HttpUtil.uploadFile(url, file, file.getName(), HttpUtil.FILE_TYPE_IMAGE, new CallBackString() {
                         @Override
                         protected void onFailure(int code, String errorMessage) {
-                            showDialog("");
+                            String tips = "";
+                            if (!TextUtils.isEmpty(errorMessage)) {
+                                if (ERROR_MSG_TIME_OUT.equals(errorMessage)) {
+                                    tips = "请求超时，请检查网络后，重新尝试！";
+                                } else if (errorMessage.contains(ERROR_MSG_FAILED_CONNECT)||errorMessage.contains(ERROR_MSG_FAILED_UNABLE_CONNECT)) {
+                                    tips = "网络异常，请检查网络后，重新尝试！";
+
+                                } else if (code == ERROR_CODE_500) {
+                                    tips = "服务器异常，请稍后重新尝试！";
+                                } else if (code == ERROR_CODE_413) {
+                                    tips = "图片过大！";
+                                }
+                            }
+
+                            showDialog(tips);
                             progressLayout.setVisibility(View.GONE);
                         }
 
@@ -328,26 +354,48 @@ public class CameraActivity extends Activity implements CameraInterface.CameraLi
 
 
     @Override
-    public void onTakePictureSuccess(File pictureFile) {
-        isTakingPhoto = false;
+    public void onTakePictureFail(byte[] data) {
+        Toast.makeText(this, "拍照失败！请检查相机后重启应用", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onTakePictureByte(byte[] data) {
+        File fileDir =this.getFilesDir();
+        if (!fileDir.exists()){
+            if (!fileDir.mkdirs()){
+                return;
+            }
+        }
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        File  mediaFile = new File(fileDir.getPath() + File.separator +
+                "IMG_" + timeStamp + ".jpg");
+
+        try {
+            FileOutputStream fos = new FileOutputStream(mediaFile);
+            fos.write(data);
+            fos.close();;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(mediaFile.exists()&&mediaFile.length()>0){
+            isTakingPhoto = false;
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inPreferredConfig = Bitmap.Config.RGB_565;
-        Bitmap bitmap = BitmapUtils.rotateBitmap(BitmapFactory.decodeFile(pictureFile.getPath(), options), CameraInterface.getInstance().getmCameraId(), cameraOrientation);
+        Bitmap bitmap = BitmapUtils.rotateBitmap(BitmapFactory.decodeFile(mediaFile.getPath(), options), CameraInterface.getInstance().getmCameraId(), cameraOrientation);
         if (pictureSize > 0) {
             bitmap = BitmapUtils.bitmapCompress(bitmap, 200);
         }
-        BitmapUtils.saveBitmapToSd(bitmap, pictureFile.getPath(), picQuality);
-        file = pictureFile;
+        BitmapUtils.saveBitmapToSd(bitmap, mediaFile.getPath(), picQuality);
+
+        file = mediaFile;
         //更新本地相册
-        Intent localIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(pictureFile));
+        Intent localIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(mediaFile));
         sendBroadcast(localIntent);
         CameraInterface.getInstance().getCamera().stopPreview();
         tongAnLearnLayoutResult.setVisibility(View.VISIBLE);
         tongAnTakePhoto.setVisibility(View.GONE);
-    }
+        }
 
-    @Override
-    public void onTakePictureFail(byte[] data) {
 
     }
 

@@ -21,7 +21,7 @@ import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
 class FileUtils {
 
     public static File getOutputMediaFile(int type, String filePath) {
-
+        Log.i("cat-chao","getOutputMediaFile" );
         if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
 
             return null;

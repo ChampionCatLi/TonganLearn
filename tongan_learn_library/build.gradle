@@ -9,10 +9,12 @@ static def getProductName() {
     return "tongan-lms-h5-sdk"
 }
 
-
 android {
     compileSdkVersion 28
-
+    //忽略警告
+    lintOptions {
+        abortOnError false
+    }
 
     defaultConfig {
         minSdkVersion 19
@@ -29,7 +31,7 @@ android {
 
     dependencies {
         implementation fileTree(dir: 'libs', include: ['*.jar'])
-        implementation 'androidx.appcompat:appcompat:1.1.0'
+        implementation 'androidx.appcompat:appcompat:1.2.0'
     }
 
     Properties properties = new Properties()
@@ -45,7 +47,7 @@ android {
 
             version {
                 name = '1.1.2'
-                desc = "通安 sdk"
+                desc = "通安 sdk 1.1.2"
                 vcsTag = '1.1.2'
             }
 

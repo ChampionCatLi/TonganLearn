@@ -12,6 +12,11 @@ public class HttpUtil {
     public static final String FILE_TYPE_IMAGE = "image/*";
     public static final String FILE_TYPE_AUDIO = "audio/*";
     public static final String FILE_TYPE_VIDEO = "video/*";
+    public static final String ERROR_MSG_TIME_OUT = "timeout";
+    public static final String ERROR_MSG_FAILED_CONNECT = "Failed";
+    public static final String ERROR_MSG_FAILED_UNABLE_CONNECT = "Unable to resolve host";
+    public static final int ERROR_CODE_500 = 500;
+    public static final int ERROR_CODE_413 = 413;
 
     /**
      * get请求
