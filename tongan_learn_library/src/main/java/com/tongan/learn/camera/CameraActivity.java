@@ -42,6 +42,8 @@ import android.widget.Toast;
 
 import com.tongan.learn.R;
 import com.tongan.learn.TaConstant;
+import com.tongan.learn.network.BaseCallBack;
+import com.tongan.learn.network.BaseResponse;
 import com.tongan.learn.network.CallBackString;
 import com.tongan.learn.network.HttpUtil;
 import com.tongan.learn.util.BitmapUtils;
@@ -54,6 +56,8 @@ import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static com.tongan.learn.TaConstant.TONGAN_FACE_URL;
+import static com.tongan.learn.TaConstant.TONGAN_ORIGIN_PHOTO_URL;
 import static com.tongan.learn.TaConstant.cameraTipsColor;
 import static com.tongan.learn.TaConstant.themColor;
 import static com.tongan.learn.network.HttpUtil.ERROR_CODE_413;
@@ -67,9 +71,8 @@ import static com.tongan.learn.util.BitmapUtils.CUT_START_Y;
 public class CameraActivity extends Activity implements CameraInterface.CameraListener {
     private static String STATUS_OK = "ok";
     private static final String STATS_KEY = "status";
-    private static final String UP_LOAD_URL = "https://mb.anjia365.com/m/home/my/facerecog/submit";
-//        private static final String TEMP_UP_LOAD_URL = "http://59.110.139.185/m/home/my/facerecog/submit";
-    //    private static final String WANG_UP_LOAD_URL = "http://192.168.3.205/m/home/my/facerecog/submit";
+    //    private static final String TONGAN_URL_HEADER = "https://mb.anjia365.com/";
+    private static final String TONGAN_URL_HEADER = "http://59.110.139.185/";
     private AlertDialog dialog;
     private final int PERMISSION_REQUEST_CODE_CAMERA = 0x02;
     private final int PERMISSION_REQUEST_CODE_STORAGE = 0x03;
@@ -94,6 +97,7 @@ public class CameraActivity extends Activity implements CameraInterface.CameraLi
     private String clazzId;
     private LinearLayout progressLayout;
     private ImageView cameraFrameImg;
+    private ImageView tongAnIvOriginal;
 
 
     @Override
@@ -111,7 +115,41 @@ public class CameraActivity extends Activity implements CameraInterface.CameraLi
         getScreenData();
         initView();
         initEvent();
+        initOriginPhoto();
         checkPermission();
+    }
+
+    /**
+     * 获取原始图片
+     */
+    private void initOriginPhoto() {
+        String url = TONGAN_URL_HEADER + TONGAN_ORIGIN_PHOTO_URL;
+        HttpUtil.get(url, new BaseCallBack() {
+            @Override
+            protected void onFailure(int code, String errorMessage) {
+                Log.i("cat-chao", errorMessage);
+
+            }
+
+            @Override
+            protected void onResponse(Object obj) {
+
+            }
+
+            @Override
+            protected Object onParseResponse(BaseResponse response) {
+                if (response != null && response.inputStream != null) {
+                    Bitmap bitmap = BitmapFactory.decodeStream(response.inputStream);
+                    if (tongAnIvOriginal!=null){
+                        tongAnIvOriginal.setImageBitmap(bitmap);
+                    }
+
+                }
+                return null;
+            }
+        });
+
+
     }
 
     private void getIntentData() {
@@ -141,6 +179,7 @@ public class CameraActivity extends Activity implements CameraInterface.CameraLi
         cameraFrameImg = findViewById(R.id.camera_frame_img);
         progressCircular = findViewById(R.id.progress_circular);
         tongAnCameraTipsTitle = findViewById(R.id.tong_an_camera_tips_title);
+        tongAnIvOriginal = findViewById(R.id.tong_an_iv_original);
         initThemColor();
         initViewSize();
         initTips();
@@ -234,7 +273,7 @@ public class CameraActivity extends Activity implements CameraInterface.CameraLi
 
                 if (file.exists() && !TextUtils.isEmpty(type) && !TextUtils.isEmpty(clazzId)) {
                     progressLayout.setVisibility(View.VISIBLE);
-                    String url = UP_LOAD_URL + "/" + clazzId + "/" + type;
+                    String url = TONGAN_URL_HEADER + TONGAN_FACE_URL + "/" + clazzId + "/" + type;
                     HttpUtil.uploadFile(url, file, file.getName(), HttpUtil.FILE_TYPE_IMAGE, new CallBackString() {
                         @Override
                         protected void onFailure(int code, String errorMessage) {
@@ -242,7 +281,7 @@ public class CameraActivity extends Activity implements CameraInterface.CameraLi
                             if (!TextUtils.isEmpty(errorMessage)) {
                                 if (ERROR_MSG_TIME_OUT.equals(errorMessage)) {
                                     tips = "请求超时，请检查网络后，重新尝试！";
-                                } else if (errorMessage.contains(ERROR_MSG_FAILED_CONNECT)||errorMessage.contains(ERROR_MSG_FAILED_UNABLE_CONNECT)) {
+                                } else if (errorMessage.contains(ERROR_MSG_FAILED_CONNECT) || errorMessage.contains(ERROR_MSG_FAILED_UNABLE_CONNECT)) {
                                     tips = "网络异常，请检查网络后，重新尝试！";
 
                                 } else if (code == ERROR_CODE_500) {
@@ -360,40 +399,41 @@ public class CameraActivity extends Activity implements CameraInterface.CameraLi
 
     @Override
     public void onTakePictureByte(byte[] data) {
-        File fileDir =this.getFilesDir();
-        if (!fileDir.exists()){
-            if (!fileDir.mkdirs()){
+        File fileDir = this.getFilesDir();
+        if (!fileDir.exists()) {
+            if (!fileDir.mkdirs()) {
                 return;
             }
         }
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        File  mediaFile = new File(fileDir.getPath() + File.separator +
+        File mediaFile = new File(fileDir.getPath() + File.separator +
                 "IMG_" + timeStamp + ".jpg");
 
         try {
             FileOutputStream fos = new FileOutputStream(mediaFile);
             fos.write(data);
-            fos.close();;
+            fos.close();
+            ;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if(mediaFile.exists()&&mediaFile.length()>0){
+        if (mediaFile.exists() && mediaFile.length() > 0) {
             isTakingPhoto = false;
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inPreferredConfig = Bitmap.Config.RGB_565;
-        Bitmap bitmap = BitmapUtils.rotateBitmap(BitmapFactory.decodeFile(mediaFile.getPath(), options), CameraInterface.getInstance().getmCameraId(), cameraOrientation);
-        if (pictureSize > 0) {
-            bitmap = BitmapUtils.bitmapCompress(bitmap, 200);
-        }
-        BitmapUtils.saveBitmapToSd(bitmap, mediaFile.getPath(), picQuality);
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inPreferredConfig = Bitmap.Config.RGB_565;
+            Bitmap bitmap = BitmapUtils.rotateBitmap(BitmapFactory.decodeFile(mediaFile.getPath(), options), CameraInterface.getInstance().getmCameraId(), cameraOrientation);
+            if (pictureSize > 0) {
+                bitmap = BitmapUtils.bitmapCompress(bitmap, 200);
+            }
+            BitmapUtils.saveBitmapToSd(bitmap, mediaFile.getPath(), picQuality);
 
-        file = mediaFile;
-        //更新本地相册
-        Intent localIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(mediaFile));
-        sendBroadcast(localIntent);
-        CameraInterface.getInstance().getCamera().stopPreview();
-        tongAnLearnLayoutResult.setVisibility(View.VISIBLE);
-        tongAnTakePhoto.setVisibility(View.GONE);
+            file = mediaFile;
+            //更新本地相册
+            Intent localIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(mediaFile));
+            sendBroadcast(localIntent);
+            CameraInterface.getInstance().getCamera().stopPreview();
+            tongAnLearnLayoutResult.setVisibility(View.VISIBLE);
+            tongAnTakePhoto.setVisibility(View.GONE);
         }
 
 
@@ -434,6 +474,8 @@ public class CameraActivity extends Activity implements CameraInterface.CameraLi
                     CameraActivity.this.dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(themColor);
                 }
             });
+        } else {
+            dialog.setMessage(tips);
         }
         dialog.show();
 

@@ -96,10 +96,11 @@
                         android:textSize="12sp" />
 
                     <ImageView
+                        android:id="@+id/tong_an_iv_original"
                         android:layout_width="64dp"
                         android:layout_height="64dp"
                         android:layout_gravity="center"
-                        android:background="@color/tong_an_learn_white"
+                        android:background="@color/tong_an_learn_black"
                         android:contentDescription="TODO" android:src="@drawable/tong_an_sample" />
                 </LinearLayout>
 
