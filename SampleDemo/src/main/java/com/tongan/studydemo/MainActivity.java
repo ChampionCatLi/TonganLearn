@@ -17,8 +17,8 @@ import java.net.URLEncoder;
 public class MainActivity extends AppCompatActivity {
     //    String url = "http://flandrescarlet.gitee.io/tools/test-v/dist/#/";
 //    String url = "http://59.110.139.185/c/?_t=5&cc=hangzhou&name=%E9%A9%AC%E6%9E%97&tid=1&ts=1602486630020&id=malin111&sign=EAC3BCFAAB0DABA19EA2BFC96D77E944";
-//    String  url ="http://59.110.139.185/c";
-    String  url ="http://www.aotuzuche.com/fastRegi/act/zimeitianjia?flag=2";
+    String  url ="http://59.110.139.185/c";
+//    String  url ="http://192.168.3.104:8080/c#/test";
 //    String  url ="https://www.baidu.com/";
     String themColor = "#666666";
     String statusBarColor = "#666666";

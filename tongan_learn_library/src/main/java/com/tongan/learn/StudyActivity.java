@@ -4,8 +4,11 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Build;
+
 import androidx.annotation.Nullable;
+
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
@@ -22,6 +25,8 @@ import com.tongan.learn.contract.StudyContract;
 import com.tongan.learn.webview.Eventlnterceptor;
 import com.tongan.learn.webview.TitleListener;
 import com.tongan.learn.webview.WebHelper;
+
+import org.json.JSONObject;
 
 public class StudyActivity extends BaseActivity implements StudyContract, TitleListener {
 
@@ -113,10 +118,10 @@ public class StudyActivity extends BaseActivity implements StudyContract, TitleL
 
 
     @Override
-    public void startGetFacePhoto(String clazzId, String type) {
+    public void startGetFacePhoto(String infoStr) {
+
         Intent intent = new Intent(this, CameraActivity.class);
-        intent.putExtra(TaConstant.TYPE, type);
-        intent.putExtra(TaConstant.CAZZ_ID, clazzId);
+        intent.putExtra(TaConstant.TA_KEY_INFO, infoStr);
         startCameraActivity(intent, TaConstant.STUDY_ACTIVITY_CODE);
     }
 
@@ -139,14 +144,14 @@ public class StudyActivity extends BaseActivity implements StudyContract, TitleL
     }
 
     /**
-     * 向js 发出人脸验证失败
+     * 向js 发出人脸取消
      */
-    protected void faceRecognitionFailed() {
+    protected void faceRecognitionCancel() {
         if (webview != null) {
             webview.post(new Runnable() {
                 @Override
                 public void run() {
-                    webview.evaluateJavascript("window.TongAnBridge.recognitionFailed()", new ValueCallback<String>() {
+                    webview.evaluateJavascript("window.TongAnBridge.recognitionCancel()", new ValueCallback<String>() {
                         @Override
                         public void onReceiveValue(String value) {
 
@@ -215,7 +220,7 @@ public class StudyActivity extends BaseActivity implements StudyContract, TitleL
             if (isSuccess) {
                 faceRecognitionSuccess();
             } else {
-                faceRecognitionFailed();
+                faceRecognitionCancel();
             }
 
         }

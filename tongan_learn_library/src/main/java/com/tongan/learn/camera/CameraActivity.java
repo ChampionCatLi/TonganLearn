@@ -48,16 +48,19 @@ import com.tongan.learn.network.CallBackString;
 import com.tongan.learn.network.HttpUtil;
 import com.tongan.learn.util.BitmapUtils;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static com.tongan.learn.TaConstant.TA_KEY_INFO;
+import static com.tongan.learn.TaConstant.TA_KEY_LOG_ID;
 import static com.tongan.learn.TaConstant.TONGAN_FACE_URL;
 import static com.tongan.learn.TaConstant.TONGAN_ORIGIN_PHOTO_URL;
+import static com.tongan.learn.TaConstant.TONGAN_TYPE_RE_SIGN;
 import static com.tongan.learn.TaConstant.cameraTipsColor;
 import static com.tongan.learn.TaConstant.themColor;
 import static com.tongan.learn.network.HttpUtil.ERROR_CODE_413;
@@ -71,6 +74,8 @@ import static com.tongan.learn.util.BitmapUtils.CUT_START_Y;
 public class CameraActivity extends Activity implements CameraInterface.CameraListener {
     private static String STATUS_OK = "ok";
     private static final String STATS_KEY = "status";
+    private static final String IS_FORCE_TRUE = "TRUE";
+
     //    private static final String TONGAN_URL_HEADER = "https://mb.anjia365.com/";
     private static final String TONGAN_URL_HEADER = "http://59.110.139.185/";
     private AlertDialog dialog;
@@ -95,10 +100,17 @@ public class CameraActivity extends Activity implements CameraInterface.CameraLi
     private File file;
     private String type;
     private String clazzId;
+    //是否为强制人脸
+    private String isForce;
+    private String logId;
+
     private LinearLayout progressLayout;
     private ImageView cameraFrameImg;
     private ImageView tongAnIvOriginal;
+    private Bitmap originPhotoBitmap;
+    private TaCameraPopupWindow taCameraPopupWindow;
 
+    private int compareFailedCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,7 +139,6 @@ public class CameraActivity extends Activity implements CameraInterface.CameraLi
         HttpUtil.get(url, new BaseCallBack() {
             @Override
             protected void onFailure(int code, String errorMessage) {
-                Log.i("cat-chao", errorMessage);
 
             }
 
@@ -139,23 +150,34 @@ public class CameraActivity extends Activity implements CameraInterface.CameraLi
             @Override
             protected Object onParseResponse(BaseResponse response) {
                 if (response != null && response.inputStream != null) {
-                    Bitmap bitmap = BitmapFactory.decodeStream(response.inputStream);
-                    if (tongAnIvOriginal!=null){
-                        tongAnIvOriginal.setImageBitmap(bitmap);
+                    originPhotoBitmap = BitmapFactory.decodeStream(response.inputStream);
+                    if (tongAnIvOriginal != null) {
+                        tongAnIvOriginal.setImageBitmap(originPhotoBitmap);
                     }
 
                 }
                 return null;
             }
         });
-
-
     }
 
     private void getIntentData() {
         Intent intent = getIntent();
-        type = intent.getStringExtra(TaConstant.TYPE);
-        clazzId = intent.getStringExtra(TaConstant.CAZZ_ID);
+        String infoJson = intent.getStringExtra(TA_KEY_INFO);
+        try {
+            JSONObject infoJSONObj = new JSONObject(infoJson);
+            type = infoJSONObj.optString(TaConstant.TA_KEY_TYPE);
+            clazzId = infoJSONObj.optString(TaConstant.TA_KEY_CAZZ_ID);
+            isForce = infoJSONObj.optString(TaConstant.TA_KEY_IS_FORCE);
+            logId = infoJSONObj.optString(TA_KEY_LOG_ID);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+//        type = intent.getStringExtra();
+//        clazzId = intent.getStringExtra();
+//        isForce = intent.getStringExtra();
     }
 
     private void getScreenData() {
@@ -251,7 +273,7 @@ public class CameraActivity extends Activity implements CameraInterface.CameraLi
     boolean isTakingPhoto = false;
 
     private void initEvent() {
-        //拍照
+//        //拍照
         tongAnTakePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -261,6 +283,8 @@ public class CameraActivity extends Activity implements CameraInterface.CameraLi
                 }
             }
         });
+
+
         tongAnCameraReplay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -273,26 +297,13 @@ public class CameraActivity extends Activity implements CameraInterface.CameraLi
 
                 if (file.exists() && !TextUtils.isEmpty(type) && !TextUtils.isEmpty(clazzId)) {
                     progressLayout.setVisibility(View.VISIBLE);
-                    String url = TONGAN_URL_HEADER + TONGAN_FACE_URL + "/" + clazzId + "/" + type;
+
+                    String url = getPushUrl();
                     HttpUtil.uploadFile(url, file, file.getName(), HttpUtil.FILE_TYPE_IMAGE, new CallBackString() {
                         @Override
                         protected void onFailure(int code, String errorMessage) {
-                            String tips = "";
-                            if (!TextUtils.isEmpty(errorMessage)) {
-                                if (ERROR_MSG_TIME_OUT.equals(errorMessage)) {
-                                    tips = "请求超时，请检查网络后，重新尝试！";
-                                } else if (errorMessage.contains(ERROR_MSG_FAILED_CONNECT) || errorMessage.contains(ERROR_MSG_FAILED_UNABLE_CONNECT)) {
-                                    tips = "网络异常，请检查网络后，重新尝试！";
-
-                                } else if (code == ERROR_CODE_500) {
-                                    tips = "服务器异常，请稍后重新尝试！";
-                                } else if (code == ERROR_CODE_413) {
-                                    tips = "图片过大！";
-                                }
-                            }
-
-                            showDialog(tips);
                             progressLayout.setVisibility(View.GONE);
+                            showErrorTips(code, errorMessage);
                         }
 
                         @Override
@@ -300,16 +311,8 @@ public class CameraActivity extends Activity implements CameraInterface.CameraLi
                             progressLayout.setVisibility(View.GONE);
                             try {
                                 JSONObject jsonObject = new JSONObject(obj);
-                                String statusKey = jsonObject.optString(STATS_KEY);
-                                if (STATUS_OK.equals(statusKey)) {
-                                    setDataAndFinish(true);
-                                } else {
-                                    String tipsStr = "";
-                                    if (jsonObject.has("message")) {
-                                        tipsStr = jsonObject.optString("message");
-                                    }
-                                    showDialog(tipsStr);
-                                }
+                                handleFaceMsg(jsonObject);
+
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -329,18 +332,92 @@ public class CameraActivity extends Activity implements CameraInterface.CameraLi
         };
     }
 
+    /**
+     * 显示网络请求错误 信息
+     *
+     * @param code
+     * @param errorMessage
+     */
+    private void showErrorTips(int code, String errorMessage) {
+        String tips = "";
+        if (!TextUtils.isEmpty(errorMessage)) {
+            if (ERROR_MSG_TIME_OUT.equals(errorMessage)) {
+                tips = "请求超时，请检查网络后，重新尝试！";
+            } else if (errorMessage.contains(ERROR_MSG_FAILED_CONNECT) || errorMessage.contains(ERROR_MSG_FAILED_UNABLE_CONNECT)) {
+                tips = "网络异常，请检查网络后，重新尝试！";
+
+            } else if (code == ERROR_CODE_500) {
+                tips = "服务器异常，请稍后重新尝试！";
+            } else if (code == ERROR_CODE_413) {
+                tips = "图片过大！";
+            }
+        }
+
+        showDialog(tips);
+    }
+
+    /**
+     * 获取 人脸识别地址
+     * 1 2  不需要处理
+     * 3  补签需要处理
+     */
+    private String getPushUrl() {
+        String url = TONGAN_URL_HEADER + TONGAN_FACE_URL + "/" + clazzId + "/" + type;
+        //补签
+        if (TONGAN_TYPE_RE_SIGN.equals(type)) {
+            return url + "?logId=" + logId;
+        }
+        return url;
+
+    }
+
+    private void handleFaceMsg(JSONObject responseJsonObj) {
+        String statusKey = responseJsonObj.optString(STATS_KEY);
+        boolean isCompareFail = responseJsonObj.has("compare_fail");
+        if (STATUS_OK.equals(statusKey)) {
+            setDataAndFinish(true);
+        } else {
+            String tipsStr = "";
+            if (responseJsonObj.has("message")) {
+                tipsStr = responseJsonObj.optString("message");
+            }
+            //如果为强制
+            if (IS_FORCE_TRUE.equals(isForce)) {
+                // 人脸比对失败
+                if (isCompareFail) {
+                    if (compareFailedCount < 1) {
+                        compareFailedCount++;
+                        showDialog(tipsStr);
+
+                    } else {
+                        showPopWindow();
+                    }
+                } else {
+                    // 人脸比对 失败
+                    showDialog(tipsStr);
+                }
+            } else {
+                showDialog(tipsStr);
+            }
+        }
+    }
+
     private void restartCamera() {
         CameraInterface.getInstance().getCamera().startPreview();
         tongAnTakePhoto.setVisibility(View.VISIBLE);
         tongAnLearnLayoutResult.setVisibility(View.GONE);
     }
 
-
+    /**
+     * 通知学习人脸 结果
+     *
+     * @param isSuccess
+     */
     private void setDataAndFinish(boolean isSuccess) {
-
-        setResult(TaConstant.STUDY_ACTIVITY_CODE, new Intent().putExtra(TaConstant.FACE_IS_SUCCESS, isSuccess));
+        if (!TONGAN_TYPE_RE_SIGN.equals(type)) {
+            setResult(TaConstant.STUDY_ACTIVITY_CODE, new Intent().putExtra(TaConstant.FACE_IS_SUCCESS, isSuccess));
+        }
         this.finish();
-
     }
 
 
@@ -377,7 +454,6 @@ public class CameraActivity extends Activity implements CameraInterface.CameraLi
     protected void onPause() {
         super.onPause();
         if (mOrientationListener != null) {
-
             mOrientationListener.disable();
         }
     }
@@ -448,6 +524,7 @@ public class CameraActivity extends Activity implements CameraInterface.CameraLi
 
 
     private void showDialog(@Nullable String tips) {
+
         if (TextUtils.isEmpty(tips)) {
             tips = getString(R.string.tong_an_learn_camera_dialog_tips);
         }
@@ -459,12 +536,7 @@ public class CameraActivity extends Activity implements CameraInterface.CameraLi
                             dialog.dismiss();
                             restartCamera();
                         }
-                    }).setNegativeButton(R.string.tong_an_learn_camera_dialog_negative_button, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    setDataAndFinish(false);
-                }
-            }).create();
+                    }).create();
             dialog.setCancelable(false);
             dialog.setCanceledOnTouchOutside(false);
             dialog.setOnShowListener(new DialogInterface.OnShowListener() {
@@ -477,8 +549,9 @@ public class CameraActivity extends Activity implements CameraInterface.CameraLi
         } else {
             dialog.setMessage(tips);
         }
-        dialog.show();
-
+        if (!CameraActivity.this.isFinishing()) {
+            dialog.show();
+        }
     }
 
     @Override
@@ -491,4 +564,36 @@ public class CameraActivity extends Activity implements CameraInterface.CameraLi
     }
 
 
+    private void showPopWindow() {
+        if (taCameraPopupWindow == null) {
+            taCameraPopupWindow = new TaCameraPopupWindow(this, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // 取消人脸
+                    if (v.getId() == R.id.tong_an_pop_later_learn_btn) {
+                        //再次尝试
+                        setDataAndFinish(false);
+                    } else if (v.getId() == R.id.tong_an_try_again_btn) {
+                        taCameraPopupWindow.dismiss();
+                    }
+                }
+            });
+
+        }
+        taCameraPopupWindow.setTonganOriginPhoto(originPhotoBitmap);
+        taCameraPopupWindow.showAtScreenBottom(CameraActivity.this.getWindow().getDecorView());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mOrientationListener != null) {
+            mOrientationListener.disable();
+            mOrientationListener = null;
+        }
+        CameraInterface.getInstance().releaseCamera();
+        dialog = null;
+        taCameraPopupWindow = null;
+
+    }
 }

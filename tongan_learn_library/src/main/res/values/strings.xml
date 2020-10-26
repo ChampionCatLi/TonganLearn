@@ -10,4 +10,10 @@
     <string name="tong_an_learn_camera_dialog_tips">人脸验证失败</string>
     <string name="tong_an_learn_camera_dialog_positive_button">重试</string>
     <string name="tong_an_learn_camera_dialog_negative_button">取消</string>
+    <string name="tong_an_learn_camera_pop_window_tips_str">为保障人脸验证正常通过，请您确认比对照片是否符合以下要求，如不符合，请立即联系所在培训机构更换备案照片</string>
+    <string name="tong_an_learn_camera_pop_window_rule_title">备案照片要求</string>
+    <string name="tong_an_learn_camera_pop_window_rule_tips">1. 照片为本人，无美颜、无PS \n2. 背景简洁干净，不过度曝光或背光 \n3. 人脸正面完整，轮廓清晰，五官不被遮挡且可辨认</string>
+    <string name="tong_an_learn_camera_pop_window_change_btn_str">更换后再学习</string>
+    <string name="tong_an_learn_camera_pop_window_try_btn_str">重新尝试验证>></string>
+
 </resources>
