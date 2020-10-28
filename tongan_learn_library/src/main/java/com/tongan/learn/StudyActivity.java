@@ -41,8 +41,10 @@ public class StudyActivity extends BaseActivity implements StudyContract, TitleL
     @Override
     protected void getIntentData() {
         super.getIntentData();
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         Intent intent = getIntent();
-        tongAnStudyUrl = intent.getStringExtra(TaConstant.TONGAN_LMS_URL);
+        String tempUrl = intent.getStringExtra(TaConstant.TONGAN_LMS_URL);
+        tongAnStudyUrl = TaHandleUrl.handleUrl(tempUrl);
         String themColor = intent.getStringExtra(TaConstant.TONGAN_LMS_THEM);
         String statusBaeColor = intent.getStringExtra(TaConstant.TONGAN_LMS_STATUS);
         String cameraTipsColor = intent.getStringExtra(TaConstant.TONGAN_LMS_CAMERA_TIPS);
@@ -199,6 +201,7 @@ public class StudyActivity extends BaseActivity implements StudyContract, TitleL
         if (webHelper != null) {
             webHelper.onDestroy();
         }
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         super.onDestroy();
     }
 

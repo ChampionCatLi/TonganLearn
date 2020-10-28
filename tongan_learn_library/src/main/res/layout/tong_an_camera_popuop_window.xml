@@ -16,7 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             android:text="@string/tong_an_learn_camera_dialog_tips"
             android:textColor="@color/tong_an_black_212121"
             android:textSize="17sp" />
@@ -38,14 +38,14 @@
             android:layout_height="100dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="10dp"
-            android:background="@color/tong_an_D8D8D8" />
+            android:background="@color/tong_an_learn_white" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
+            android:layout_marginStart="25dp"
             android:layout_marginTop="15dp"
-            android:layout_marginEnd="15dp"
+            android:layout_marginEnd="25dp"
             android:background="@color/tong_an_learn_camera_pop_window_tips_bg"
             android:orientation="vertical">
 
@@ -59,10 +59,12 @@
                 android:textSize="13sp" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
                 android:paddingBottom="10dp"
                 android:text="@string/tong_an_learn_camera_pop_window_rule_tips"
                 android:textColor="@color/tong_an_black_212121"
@@ -90,7 +92,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="15dp"
-            android:paddingBottom="10dp"
+            android:paddingBottom="20dp"
             android:text="@string/tong_an_learn_camera_pop_window_try_btn_str"
             android:textColor="@color/tong_an_gay_616161"
             android:textSize="13sp" />

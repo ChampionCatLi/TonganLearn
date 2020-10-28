@@ -50,15 +50,15 @@ public class WebHelper {
             webSettings.setSupportZoom(true);
             webSettings.setTextZoom(100);
             webSettings.setDomStorageEnabled(true);
-            webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+            webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
             webSettings.setAllowFileAccess(true);
-            webSettings.setAppCacheEnabled(true);
             webSettings.setAppCachePath(activity.getApplication().getCacheDir().getAbsolutePath());
             webSettings.setDefaultTextEncodingName("utf-8");
             webView.addJavascriptInterface(new TongAnBridge(activity, (StudyActivity) activity), "TongAnBridge");
             videoImpl = new VideoImpl(activity, webView);
             myWebChromeClient = new MyWebChromeClient(videoImpl);
             webView.setWebChromeClient(myWebChromeClient);
+            webView.clearHistory();
             webView.setWebViewClient(new MyWebClient());
             webView.setDownloadListener(new DownloadListener() {
                 @Override
@@ -76,7 +76,6 @@ public class WebHelper {
             });
 
         }
-
         return this;
     }
 

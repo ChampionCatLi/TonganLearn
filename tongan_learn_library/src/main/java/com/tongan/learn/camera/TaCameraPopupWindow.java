@@ -42,7 +42,7 @@ class TaCameraPopupWindow extends PopupWindow {
         setContentView(contentView);
         int screenWidth = activity.getWindowManager().getDefaultDisplay().getWidth();
         //获取popupwindow的高度与宽度
-        this.setWidth((int) (screenWidth - 2 * dp2px(mContext, 12f)));
+        this.setWidth((int) (screenWidth - 2 * dp2px(mContext, 35f)));
         this.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
         // 设置背景透明度
         setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));

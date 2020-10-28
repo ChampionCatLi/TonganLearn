@@ -52,6 +52,8 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
                 CameraInterface.getInstance().getCamera().setPreviewDisplay(holder);
                 CameraInterface.getInstance().getCamera().startPreview();
                 CameraInterface.getInstance().getCamera().cancelAutoFocus();
+                CameraInterface.getInstance().safeToTakePicture = true;
+
             }
         } catch (Exception e) {
             e.printStackTrace();

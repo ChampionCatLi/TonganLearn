@@ -57,7 +57,7 @@ public class TongAnBridge {
 //    }
 
     @JavascriptInterface
-    public void  androidRecognition(String infoStr){
+    public void  recognition(String infoStr){
       if (!TextUtils.isEmpty(infoStr)){
             studyContract.startGetFacePhoto(infoStr);
         }

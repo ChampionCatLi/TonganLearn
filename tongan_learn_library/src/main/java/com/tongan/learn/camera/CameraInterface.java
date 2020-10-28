@@ -7,6 +7,7 @@ import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
 import android.util.Log;
 import android.view.Surface;
+import android.view.SurfaceHolder;
 import android.widget.FrameLayout;
 
 import java.io.File;
@@ -24,7 +25,7 @@ import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
 import static com.tongan.learn.camera.CameraParaUtil.CAMERA_FILE_PATH;
 
 
- class CameraInterface {
+class CameraInterface {
     private static final String TAG = "SydCamera";
     private static CameraInterface mCameraInterface;
     private Camera mCamera = null;
@@ -38,6 +39,7 @@ import static com.tongan.learn.camera.CameraParaUtil.CAMERA_FILE_PATH;
     private VideoRecordListener videoRecordListener = null;
     private int screenWith;
     private int screenHeight;
+    public boolean safeToTakePicture = true;
 
     public void setScreenData(int screenWith, int screenHeight) {
         this.screenWith = screenWith;
@@ -51,9 +53,10 @@ import static com.tongan.learn.camera.CameraParaUtil.CAMERA_FILE_PATH;
 
         /**
          * 拍照完成后 传递字节
+         *
          * @param data
          */
-        void  onTakePictureByte(byte[] data);
+        void onTakePictureByte(byte[] data);
     }
 
     public interface VideoRecordListener {
@@ -93,7 +96,6 @@ import static com.tongan.learn.camera.CameraParaUtil.CAMERA_FILE_PATH;
         mCamera.setParameters(params);
         mCamera.setDisplayOrientation(90);//预览旋转90度
     }
-
 
 
     public void focusOnTouch(int x, int y, FrameLayout preview) {
@@ -143,18 +145,18 @@ import static com.tongan.learn.camera.CameraParaUtil.CAMERA_FILE_PATH;
     }
 
 
-
-
     public void takePicture() {
-        if (mCamera != null)
+        if (mCamera != null && safeToTakePicture) {
             mCamera.takePicture(null, null, mPicture);
+            safeToTakePicture = false;
+        }
     }
 
     private Camera.PictureCallback mPicture = new Camera.PictureCallback() {
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
 //            File pictureFile = FileUtils.getOutputMediaFile(MEDIA_TYPE_IMAGE, CAMERA_FILE_PATH);
-            if (data == null||data.length==0) {
+            if (data == null || data.length == 0) {
                 onTakePictureFail(data);
                 return;
             }
@@ -221,4 +223,6 @@ import static com.tongan.learn.camera.CameraParaUtil.CAMERA_FILE_PATH;
     public int getmCameraId() {
         return mCameraId;
     }
+
+
 }

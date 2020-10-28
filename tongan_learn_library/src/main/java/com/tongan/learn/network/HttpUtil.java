@@ -17,7 +17,7 @@ public class HttpUtil {
     public static final String ERROR_MSG_FAILED_UNABLE_CONNECT = "Unable to resolve host";
     public static final int ERROR_CODE_500 = 500;
     public static final int ERROR_CODE_413 = 413;
-
+    public static final int ERROR_CODE_401 = 401;
     /**
      * get请求
      *
