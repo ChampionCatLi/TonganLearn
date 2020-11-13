@@ -12,7 +12,7 @@ import android.content.DialogInterface;
 class DialogUtil {
 
     public static void showPermissionDeniedDialog(final Activity context, String str) {
-        new AlertDialog.Builder(context).setTitle("获取" + str + "权限被禁用")
+        new AlertDialog.Builder(context).setTitle("权限被禁用")
                 .setMessage("请在 设置-应用管理-权限管理 (将" + str + "权限打开)")
                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                     @Override

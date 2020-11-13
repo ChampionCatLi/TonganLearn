@@ -18,183 +18,188 @@
     </FrameLayout>
 
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        android:orientation="vertical"
+        android:visibility="visible">
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/tong_an_camera_title"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fitsSystemWindows="true"
-            android:orientation="vertical"
-            android:visibility="visible">
+            android:layout_height="44dp"
+            android:layout_alignParentTop="true"
+            android:background="@color/tong_an_learn_black"
+            android:gravity="center"
+            android:text="@string/tong_an_learn_camera_title"
+            android:textColor="@color/tong_an_learn_white"
+            android:textSize="16sp" />
+
+        <!--            <View-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="0dp"-->
+        <!--                android:layout_weight="1"-->
+        <!--                android:background="@color/tong_an_learn_black" />-->
+
+        <RelativeLayout
+            android:id="@+id/camera_area"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/tong_an_learn_transparent">
+
+            <ImageView
+                android:id="@+id/camera_frame_img"
+                android:layout_width="240dp"
+                android:layout_height="240dp"
+                android:layout_centerInParent="true"
+                android:contentDescription="TODO"
+                android:src="@drawable/tong_an_frame" />
+
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/rl_button"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/tong_an_learn_black"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp">
 
             <TextView
-                android:id="@+id/tong_an_camera_title"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_alignParentTop="true"
-                android:background="@color/tong_an_learn_black"
-                android:gravity="center"
-                android:text="@string/tong_an_learn_camera_title"
-                android:textColor="@color/tong_an_learn_white"
-                android:textSize="16sp" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:background="@color/tong_an_learn_black" />
-
-            <RelativeLayout
-                android:id="@+id/camera_area"
+                android:id="@+id/tong_an_camera_tips_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/tong_an_learn_transparent">
+                android:layout_marginTop="17dp"
+                android:textColor="@color/tong_an_learn_white"
+                android:textSize="12sp" />
 
-                <ImageView
-                    android:id="@+id/camera_frame_img"
-                    android:layout_width="240dp"
-                    android:layout_height="240dp"
-                    android:layout_centerInParent="true"
-                    android:contentDescription="TODO" android:src="@drawable/tong_an_frame" />
-
-
-            </RelativeLayout>
-
-
-            <RelativeLayout
-                android:id="@+id/rl_button"
+            <LinearLayout
+                android:id="@+id/layout_tips"
                 android:layout_width="match_parent"
-                android:layout_height="220dp"
-                android:layout_alignParentBottom="true"
-                android:background="@color/tong_an_learn_black"
-                android:paddingStart="15dp"
-                android:paddingEnd="15dp">
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tong_an_camera_tips_title"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/tong_an_camera_tips_title"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="17dp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_weight="1"
+                    android:lineSpacingExtra="1.5dp"
+                    android:text="@string/tong_an_learn_camera_tips_list"
                     android:textColor="@color/tong_an_learn_white"
                     android:textSize="12sp" />
 
-                <LinearLayout
-                    android:id="@+id/layout_tips"
-                    android:layout_width="match_parent"
+                <ImageView
+                    android:id="@+id/tong_an_iv_original"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:layout_gravity="center"
+                    android:background="@color/tong_an_learn_black"
+                    android:contentDescription="TODO"
+                    android:src="@drawable/tong_an_sample" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/tong_an_take_photo"
+                android:layout_width="300dp"
+                android:layout_height="40dp"
+                android:layout_below="@id/layout_tips"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/tong_an_shape_green"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:visibility="visible">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:contentDescription="TODO"
+                    android:src="@drawable/tong_an_camera" />
+
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/tong_an_camera_tips_title"
-                    android:layout_marginTop="15dp"
-                    android:orientation="horizontal">
+                    android:layout_marginLeft="5dp"
+                    android:text="@string/tong_an_learn_camera_take_photo"
+                    android:textColor="@color/tong_an_learn_white"
+                    android:textSize="17sp" />
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="15dp"
-                        android:layout_weight="1"
-                        android:lineSpacingExtra="1.5dp"
-                        android:text="@string/tong_an_learn_camera_tips_list"
-                        android:textColor="@color/tong_an_learn_white"
-                        android:textSize="12sp" />
+            </LinearLayout>
 
-                    <ImageView
-                        android:id="@+id/tong_an_iv_original"
-                        android:layout_width="64dp"
-                        android:layout_height="64dp"
-                        android:layout_gravity="center"
-                        android:background="@color/tong_an_learn_black"
-                        android:contentDescription="TODO" android:src="@drawable/tong_an_sample" />
-                </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/tong_an_learn_layout_result"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_below="@id/layout_tips"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <LinearLayout
-                    android:id="@+id/tong_an_take_photo"
-                    android:layout_width="300dp"
-                    android:layout_height="40dp"
-                    android:layout_below="@id/layout_tips"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="20dp"
-                    android:background="@drawable/tong_an_shape_green"
+                    android:id="@+id/tong_an_camera_replay"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/tong_an_shape_gray"
                     android:gravity="center"
-                    android:orientation="horizontal"
-                    android:visibility="visible">
+                    android:orientation="horizontal">
 
                     <ImageView
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:contentDescription="TODO" android:src="@drawable/tong_an_camera" />
+                        android:contentDescription="TODO"
+                        android:src="@drawable/tong_an_refresh" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
-                        android:text="@string/tong_an_learn_camera_take_photo"
+                        android:text="@string/tong_an_learn_camera_replay"
                         android:textColor="@color/tong_an_learn_white"
                         android:textSize="17sp" />
-
                 </LinearLayout>
 
+
+                <View
+                    android:layout_width="10dp"
+                    android:layout_height="match_parent" />
 
                 <LinearLayout
-                    android:id="@+id/tong_an_learn_layout_result"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_below="@id/layout_tips"
-                    android:layout_marginTop="20dp"
-                    android:orientation="horizontal"
-                    android:visibility="gone">
+                    android:id="@+id/tong_an_camera_commit"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/tong_an_shape_green"
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
-                    <LinearLayout
-                        android:id="@+id/tong_an_camera_replay"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@drawable/tong_an_shape_gray"
-                        android:gravity="center"
-                        android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:contentDescription="TODO"
+                        android:src="@drawable/tong_an_upload" />
 
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:contentDescription="TODO" android:src="@drawable/tong_an_refresh" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:text="@string/tong_an_learn_camera_replay"
-                            android:textColor="@color/tong_an_learn_white"
-                            android:textSize="17sp" />
-                    </LinearLayout>
-
-
-                    <View
-                        android:layout_width="10dp"
-                        android:layout_height="match_parent" />
-
-                    <LinearLayout
-                        android:id="@+id/tong_an_camera_commit"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@drawable/tong_an_shape_green"
-                        android:gravity="center"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:contentDescription="TODO" android:src="@drawable/tong_an_upload" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:text="@string/tong_an_learn_camera_commit"
-                            android:textColor="@color/tong_an_learn_white"
-                            android:textSize="17sp" />
-                    </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:text="@string/tong_an_learn_camera_commit"
+                        android:textColor="@color/tong_an_learn_white"
+                        android:textSize="17sp" />
                 </LinearLayout>
+            </LinearLayout>
 
-            </RelativeLayout>
-        </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
 
 
     <LinearLayout

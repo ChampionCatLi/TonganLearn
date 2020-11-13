@@ -19,7 +19,7 @@ import android.widget.TextView;
 import com.tongan.learn.R;
 
 import static com.tongan.learn.TaConstant.themColor;
-import static com.tongan.learn.util.BitmapUtils.dp2px;
+import static com.tongan.learn.util.MyBitmapUtils.dp2px;
 
 /**
  * Date: 2020/10/25

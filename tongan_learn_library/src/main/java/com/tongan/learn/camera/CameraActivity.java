@@ -11,25 +11,17 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
+import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
-
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.KeyEvent;
-import android.view.OrientationEventListener;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
@@ -40,13 +32,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+
 import com.tongan.learn.R;
 import com.tongan.learn.TaConstant;
 import com.tongan.learn.network.BaseCallBack;
 import com.tongan.learn.network.BaseResponse;
 import com.tongan.learn.network.CallBackString;
 import com.tongan.learn.network.HttpUtil;
-import com.tongan.learn.util.BitmapUtils;
+import com.tongan.learn.util.MyBitmapUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -57,9 +53,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static com.tongan.learn.TaConstant.TA_KEY_INFO;
-import static com.tongan.learn.TaConstant.TONGAN_FACE_URL;
 import static com.tongan.learn.TaConstant.TONGAN_ORIGIN_PHOTO_URL;
-import static com.tongan.learn.TaConstant.TONGAN_TYPE_RE_SIGN;
 import static com.tongan.learn.TaConstant.cameraTipsColor;
 import static com.tongan.learn.TaConstant.themColor;
 import static com.tongan.learn.network.HttpUtil.ERROR_CODE_401;
@@ -68,7 +62,7 @@ import static com.tongan.learn.network.HttpUtil.ERROR_CODE_500;
 import static com.tongan.learn.network.HttpUtil.ERROR_MSG_FAILED_CONNECT;
 import static com.tongan.learn.network.HttpUtil.ERROR_MSG_FAILED_UNABLE_CONNECT;
 import static com.tongan.learn.network.HttpUtil.ERROR_MSG_TIME_OUT;
-import static com.tongan.learn.util.BitmapUtils.CUT_START_Y;
+
 
 
 public class CameraActivity extends Activity implements CameraInterface.CameraListener {
@@ -77,17 +71,12 @@ public class CameraActivity extends Activity implements CameraInterface.CameraLi
     private static final String IS_FORCE_TRUE = "TRUE";
 
     private static final String TONGAN_URL_HEADER = "https://mb.anjia365.com";
-//    private static final String TONGAN_URL_HEADER = "http://59.110.139.185";
+//        private static final String TONGAN_URL_HEADER = "http://59.110.139.185";
     private AlertDialog dialog;
     private final int PERMISSION_REQUEST_CODE_CAMERA = 0x02;
     private final int PERMISSION_REQUEST_CODE_STORAGE = 0x03;
     private FrameLayout preview;
     private CameraPreview mSurfaceView;
-    private OrientationEventListener mOrientationListener;
-    private int cameraOrientation = 0;
-    private int picQuality;
-
-    private int pictureSize;
     private LinearLayout tongAnTakePhoto;
     private LinearLayout tongAnCameraReplay;
     private LinearLayout tongAnCameraCommit;
@@ -122,7 +111,6 @@ public class CameraActivity extends Activity implements CameraInterface.CameraLi
 
     private void init() {
         getIntentData();
-        getScreenData();
         initView();
         initEvent();
         initOriginPhoto();
@@ -170,21 +158,8 @@ public class CameraActivity extends Activity implements CameraInterface.CameraLi
             e.printStackTrace();
         }
 
-
-//        type = intent.getStringExtra();
-//        clazzId = intent.getStringExtra();
-//        isForce = intent.getStringExtra();
     }
 
-    private void getScreenData() {
-
-        Point point = DisplayUtils.getScreenMetrics(this);
-        picQuality = CameraParaUtil.defaultPicQuality;
-        screenWith = point.x;
-        screenHeight = point.y;
-        pictureSize = 200;
-
-    }
 
     private void initView() {
         progressLayout = findViewById(R.id.progress_layout);
@@ -199,18 +174,17 @@ public class CameraActivity extends Activity implements CameraInterface.CameraLi
         tongAnCameraTipsTitle = findViewById(R.id.tong_an_camera_tips_title);
         tongAnIvOriginal = findViewById(R.id.tong_an_iv_original);
         initThemColor();
-        initViewSize();
         initTips();
 
     }
 
     private void initThemColor() {
         progressCircular.getIndeterminateDrawable().setColorFilter(themColor, PorterDuff.Mode.MULTIPLY);
-        setShapBackColor((GradientDrawable) tongAnTakePhoto.getBackground());
-        setShapBackColor((GradientDrawable) tongAnCameraCommit.getBackground());
+        setShapeBackColor((GradientDrawable) tongAnTakePhoto.getBackground());
+        setShapeBackColor((GradientDrawable) tongAnCameraCommit.getBackground());
     }
 
-    private void setShapBackColor(GradientDrawable drawable) {
+    private void setShapeBackColor(GradientDrawable drawable) {
         drawable.mutate();
         drawable.setColor(themColor);
     }
@@ -224,46 +198,12 @@ public class CameraActivity extends Activity implements CameraInterface.CameraLi
 
     }
 
-    /**
-     * init  view and  cut photo size
-     */
-    private void initViewSize() {
-        ViewGroup.LayoutParams cameraFrameImgParam = cameraFrameImg.getLayoutParams();
-        ViewGroup.LayoutParams layoutParams = cameraArea.getLayoutParams();
-        if (600 <= screenWith && screenWith < 1080) {
-            layoutParams.height = screenHeight / 2;
-            layoutParams.width = screenWith;
-        } else if (screenWith < 600) {
-            layoutParams.height = 350;
-            layoutParams.width = screenWith;
-            cameraFrameImgParam.width = BitmapUtils.dp2px(CameraActivity.this, 180);
-            cameraFrameImgParam.height = BitmapUtils.dp2px(CameraActivity.this, 180);
-            cameraFrameImg.setLayoutParams(cameraFrameImgParam);
-        } else {
-            layoutParams.height = screenWith;
-            layoutParams.width = screenWith;
-        }
-
-        cameraArea.setLayoutParams(layoutParams);
-        BitmapUtils.CUT_WITH = screenWith;
-        BitmapUtils.CUT_HEIGHT = screenWith;
-    }
 
     @SuppressLint("ClickableViewAccessibility")
     private void initCameraView() {
-        CameraInterface.getInstance().setScreenWith(screenWith);
-        CameraInterface.getInstance().setScreenHeight(screenHeight);
         CameraInterface.getInstance().setCameraListener(this);
         mSurfaceView = new CameraPreview(this);
         preview.addView(mSurfaceView);
-        cameraArea.post(new Runnable() {
-            @Override
-            public void run() {
-                int[] point = new int[2];
-                cameraArea.getLocationInWindow(point);
-                CUT_START_Y = point[1];
-            }
-        });
     }
 
     boolean isTakingPhoto = false;
@@ -320,12 +260,7 @@ public class CameraActivity extends Activity implements CameraInterface.CameraLi
             }
         });
         //
-        mOrientationListener = new OrientationEventListener(this) {
-            @Override
-            public void onOrientationChanged(int orientation) {
-                cameraOrientation = orientation;
-            }
-        };
+
     }
 
     /**
@@ -424,28 +359,13 @@ public class CameraActivity extends Activity implements CameraInterface.CameraLi
                     @Override
                     public void onPermissionDenied(final String[] deniedPermissions, boolean alwaysDenied) {
                         if (alwaysDenied) {
-                            DialogUtil.showPermissionDeniedDialog(CameraActivity.this, "文件存储");
+                            DialogUtil.showPermissionDeniedDialog(CameraActivity.this, "相机和文件存储");
                         } else {
-                            DialogUtil.showPermissionRemindDiaog(CameraActivity.this, "文件存储", deniedPermissions, PERMISSION_REQUEST_CODE_CAMERA);
+                            DialogUtil.showPermissionRemindDiaog(CameraActivity.this, "相机和文件存储", deniedPermissions, PERMISSION_REQUEST_CODE_CAMERA);
                         }
                     }
                 });
     }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mOrientationListener.enable();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (mOrientationListener != null) {
-            mOrientationListener.disable();
-        }
-    }
-
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -483,14 +403,10 @@ public class CameraActivity extends Activity implements CameraInterface.CameraLi
         }
         if (mediaFile.exists() && mediaFile.length() > 0) {
             isTakingPhoto = false;
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inPreferredConfig = Bitmap.Config.RGB_565;
-            Bitmap bitmap = BitmapUtils.rotateBitmap(BitmapFactory.decodeFile(mediaFile.getPath(), options), CameraInterface.getInstance().getmCameraId(), cameraOrientation);
-            if (pictureSize > 0) {
-                bitmap = BitmapUtils.bitmapCompress(bitmap, 200);
-            }
-            BitmapUtils.saveBitmapToSd(bitmap, mediaFile.getPath(), picQuality);
 
+            Bitmap retBitmap = BitmapFactory.decodeFile(mediaFile.getPath());
+            retBitmap = MyBitmapUtils.setTakePicktrueOrientation(Camera.CameraInfo.CAMERA_FACING_FRONT, retBitmap);
+            MyBitmapUtils.saveBitmap(retBitmap, mediaFile.getPath());
             file = mediaFile;
             //更新本地相册
             Intent localIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(mediaFile));
@@ -575,13 +491,14 @@ public class CameraActivity extends Activity implements CameraInterface.CameraLi
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mOrientationListener != null) {
-            mOrientationListener.disable();
-            mOrientationListener = null;
-        }
         CameraInterface.getInstance().releaseCamera();
-        dialog = null;
-        taCameraPopupWindow = null;
+        if (dialog != null) {
+            dialog = null;
+        }
+        if (taCameraPopupWindow != null) {
+            taCameraPopupWindow = null;
+
+        }
 
     }
 }

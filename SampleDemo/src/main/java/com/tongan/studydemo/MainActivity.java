@@ -13,6 +13,7 @@ import com.tongan.learn.StudyActivity;
 import com.tongan.learn.StudyMessage;
 import com.tongan.learn.TaConstant;
 import com.tongan.learn.TaHandleUrl;
+import com.tongan.learn.camera.CameraActivity;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -51,10 +52,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 goStudyActivityByMessage();
-
-//                getTestUrl(testUrlIndex);
-//                testUrlIndex++;
-
             }
         });
     }
@@ -91,8 +88,8 @@ public class MainActivity extends AppCompatActivity {
                 tempUrl = testUrl9;
                 break;
         }
-        if (testUrlIndex==9){
-            testUrlIndex=1;
+        if (testUrlIndex == 9) {
+            testUrlIndex = 1;
         }
         testUrl(tempUrl);
     }
@@ -102,6 +99,8 @@ public class MainActivity extends AppCompatActivity {
      */
     private void goStudyActivityByMessage() {
         new StudyMessage.Builder().setStudyUrl(url).setStatusBarColor(statusBarColor).setThemColor(themColor).builder().study(this);
+
+
     }
 
     /***
@@ -117,9 +116,9 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void testUrl(String url) {
-        egUrl.setText("测试url:   "+url);
+        egUrl.setText("测试url:   " + url);
         String getUrl = TaHandleUrl.handleUrl(url);
-        showUrl.setText("结果url:   "+getUrl);
+        showUrl.setText("结果url:   " + getUrl);
         Log.i("cat-chao", "testUrlIndex:::::" + testUrlIndex + "::::::getUrl:::" + getUrl);
     }
 
